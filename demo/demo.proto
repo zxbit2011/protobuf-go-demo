@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+
+package demo;
+
+message Demo {
+    string floor = 1;
+    string fill = 2;
+    string label = 3;
+}

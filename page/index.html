@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button type="button" onclick="GetProtobuf()">test</button>
+<script src="jquery.min.js" type="application/javascript"></script>
+<script src="pbf.js" type="application/javascript"></script>
+<script>
+    function GetProtobuf() {
+        /*$.ajax({
+            url: "/demo.pbf",
+            type: "get",
+            dataType: "text",
+            processData: false,
+            success: function (res) {
+                console.log(res)
+            }
+        })*/
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/demo.pbf', true);
+        xhr.responseType = 'arraybuffer';
+
+        xhr.onload = function (e) {
+            if (this.status == 200) {
+                //Do your stuff here
+                var responseArray = new Uint8Array(this.response);
+                var pbf = new Pbf(responseArray);
+                console.log(pbf)
+            }
+        };
+
+        xhr.send();
+    }
+</script>
+</body>
+</html>
