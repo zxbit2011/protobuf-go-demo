@@ -8,6 +8,7 @@
 <button type="button" onclick="GetProtobuf()">test</button>
 <script src="jquery.min.js" type="application/javascript"></script>
 <script src="pbf.js" type="application/javascript"></script>
+<script src="floors_analyze.js" type="application/javascript"></script>
 <script>
     function GetProtobuf() {
         /*$.ajax({
@@ -28,7 +29,8 @@
                 //Do your stuff here
                 var responseArray = new Uint8Array(this.response);
                 var pbf = new Pbf(responseArray);
-                console.log(pbf)
+                let mapData = FeaturesAnalyze(pbf)
+                console.log(mapData)
             }
         };
 

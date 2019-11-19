@@ -27,7 +27,7 @@ message Label {
 
 message Geometry {
     string type = 1;
-    repeated InternalArray coordinates = 2;
+    repeated double coordinates = 2;
 }
 
 message Properties{
@@ -43,8 +43,4 @@ message Properties{
     float opacity = 10;
     string borderColor = 11;
     float layer = 12;
-}
-
-message InternalArray {
-    repeated double internal_array = 1;
 }

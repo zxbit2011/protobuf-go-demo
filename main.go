@@ -36,22 +36,105 @@ func main() {
 	e.Static("/page", "page")
 	e.File("/", "page/index.html")
 	e.GET("/innerMap.pbf", func(c echo.Context) error {
-		data, err := ReadAll("demo.json")
-		if err != nil {
-			return c.String(http.StatusOK, "读取文件失败")
-		}
-		mapData := &innerMap.Map{}
-		err = proto.Unmarshal([]byte(data), mapData)
-		if err != nil {
-			return c.String(http.StatusOK, fmt.Sprintf("innerMap Unmarshal err: %s", err.Error()))
-		}
+		var arr = []float64{123.545, 465456465.1155}
 
-		b, _ := proto.Marshal(mapData)
-		return c.Blob(http.StatusOK, "", b)
+		mapData := &innerMap.Map{}
+		mapData.Fill = []*innerMap.Fill{
+			{
+				Geometry: []*innerMap.Geometry{
+					{Type: "Polygon", Coordinates: [][]float64{arr}},
+					{Type: "Polygon", Coordinates: [][]float64{arr}},
+				},
+				Properties: []*innerMap.Properties{
+					{
+						Id:          "07550046B0400001",
+						Name:        "",
+						Icon:        "",
+						X:           12685203.757971337,
+						Y:           2574193.582845682,
+						Floor:       -5,
+						Height:      15,
+						Base:        "",
+						Color:       "#CCCCCC",
+						Opacity:     1,
+						BorderColor: "#E0E0E0",
+						Layer:       1,
+					},
+				},
+			},
+		}
+		mapData.Floor = []*innerMap.Floor{
+			{
+				Geometry: []*innerMap.Geometry{
+					{Type: "Polygon", Coordinates: [][]float64{arr}},
+					{Type: "Polygon", Coordinates: [][]float64{arr}},
+				},
+				Properties: []*innerMap.Properties{
+					{
+						Id:          "07550046B0400001",
+						Name:        "",
+						Icon:        "",
+						X:           12685203.757971337,
+						Y:           2574193.582845682,
+						Floor:       -5,
+						Height:      15,
+						Base:        "",
+						Color:       "#CCCCCC",
+						Opacity:     1,
+						BorderColor: "#E0E0E0",
+						Layer:       1,
+					},
+				},
+			},
+		}
+		mapData.Label = []*innerMap.Label{
+			{
+				Geometry: []*innerMap.Geometry{
+					{Type: "Polygon", Coordinates: [][]float64{arr}},
+					{Type: "Polygon", Coordinates: [][]float64{arr}},
+				},
+				Properties: []*innerMap.Properties{
+					{
+						Id:          "07550046B0400001",
+						Name:        "",
+						Icon:        "",
+						X:           12685203.757971337,
+						Y:           2574193.582845682,
+						Floor:       -5,
+						Height:      15,
+						Base:        "",
+						Color:       "#CCCCCC",
+						Opacity:     1,
+						BorderColor: "#E0E0E0",
+						Layer:       1,
+					},
+				},
+			},
+		}
+		// 编码
+		data, err := proto.Marshal(mapData)
+		if err != nil {
+			log.Fatal("marshaling error: ", err)
+		}
+		// 解码
+		newDeviceInfo := &innerMap.Map{}
+		err = proto.Unmarshal(data, newDeviceInfo)
+		if err != nil {
+			log.Fatal("unmarshaling error: ", err)
+		}
+		jsonStr, err := json.Marshal(newDeviceInfo)
+		if err != nil {
+			return c.String(http.StatusOK, err.Error())
+		}
+		return c.String(http.StatusOK, string(jsonStr))
 	})
 	e.GET("/demo.pbf", func(c echo.Context) error {
 		mapData := demo.Demo{}
-		err := json.Unmarshal([]byte(`{"floor":"楼层","fill":"填充","label":"标签"}`), &mapData)
+		data, err := ReadAll("demo.json")
+		if err != nil {
+			return c.String(http.StatusOK, err.Error())
+		}
+		err = json.Unmarshal(data, &mapData)
 		if err != nil {
 			return c.String(http.StatusOK, fmt.Sprintf("Demo Unmarshal err: %s", err.Error()))
 		}
@@ -60,7 +143,7 @@ func main() {
 		return c.Blob(http.StatusOK, "application/octet-stream", b)
 	})
 	go func() {
-		if err := e.Start(fmt.Sprintf(":%d", 8080)); err != nil {
+		if err := e.Start(fmt.Sprintf(":%d", 8083)); err != nil {
 			e.Logger.Info("shutting down the server")
 		}
 	}()
